@@ -20,11 +20,50 @@
 #import <CoreLocation/CoreLocation.h>
 
 @interface ViewController ()<CLLocationManagerDelegate>
+@property (weak, nonatomic) IBOutlet UITextField *locationNameTextField;
+
+- (IBAction)geoEncode;
+
+- (IBAction)geoDecode;
 
 @property (nonatomic, strong) CLLocationManager *manager;
+
+@property (nonatomic, strong) CLGeocoder *geoCoder;
 @end
 
 @implementation ViewController
+
+
+- (CLGeocoder *)geoCoder {
+    if (_geoCoder == nil) {
+        _geoCoder = [[CLGeocoder alloc] init];
+    }
+    return _geoCoder;
+}
+
+
+//地理编码
+- (IBAction)geoEncode {
+    
+    NSString *locationName = self.locationNameTextField.text;
+    
+    [self.geoCoder geocodeAddressString:locationName completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+        for (CLPlacemark *placdMark in placemarks) {
+            
+            CLLocation *location = placdMark.location;
+            
+            NSLog(@"位置名称:%@,latitude: %f, longitude:%f", placdMark.name,location.coordinate.longitude, location.coordinate.latitude);
+            
+        }
+    }];
+    
+    
+}
+
+//反编码
+- (IBAction)geoDecode {
+
+}
 
 - (CLLocationManager *)manager {
     if (!_manager) {
