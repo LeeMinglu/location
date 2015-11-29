@@ -26,6 +26,12 @@
 
 - (IBAction)geoDecode;
 
+@property (weak, nonatomic) IBOutlet UITextField *latitude;
+
+@property (weak, nonatomic) IBOutlet UITextField *longitude;
+
+@property (weak, nonatomic) IBOutlet UILabel *reversLabel;
+
 @property (nonatomic, strong) CLLocationManager *manager;
 
 @property (nonatomic, strong) CLGeocoder *geoCoder;
@@ -62,6 +68,16 @@
 
 //反编码
 - (IBAction)geoDecode {
+    
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:self.latitude.text.doubleValue longitude:self.longitude.text.doubleValue];
+    
+    [self.geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+        CLPlacemark *pl = [placemarks firstObject];
+        
+        self.reversLabel.text = pl.name;
+        
+        NSLog(@"位置为:%@", pl.name);
+    }];
 
 }
 
